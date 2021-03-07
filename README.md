@@ -6,9 +6,9 @@ A non-priviledged user `ansible` is created with password-less sudo configured.
 
 ## Tags
 
-  - `latest`: Latest stable version of Ansible, on Python 2.7.x.
+The following tags are available:
 
-The latest tag is a lightweight image for basic validation of Ansible playbooks. The `testing` tag also includes a comprehensive suite of Ansible and infrastructure testing tools in case you want them pre-installed.
+  - `latest`: Latest stable version of Ansible, on Python 2.7.x.
 
 ## How to Build
 
@@ -63,4 +63,4 @@ provisioner:
 
 ## Author
 
-Created 2021 by Tim Grützmacher
+Created 2021 by Tim Grützmacher, inspired by [Jeff Geerling](https://www.jeffgeerling.com/)
