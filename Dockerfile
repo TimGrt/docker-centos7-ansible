@@ -37,7 +37,7 @@ RUN mkdir -p /etc/ansible
 RUN echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
 
 VOLUME ["/sys/fs/cgroup"]
-CMD ["/usr/lib/systemd/systemd"]
+CMD ["/usr/sbin/init"]
 
 # Create `ansible` user with sudo permissions and membership in `DEPLOY_GROUP`
 ENV ANSIBLE_USER=ansible SUDO_GROUP=wheel DEPLOY_GROUP=deployer
