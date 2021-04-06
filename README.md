@@ -43,6 +43,9 @@ driver:
 platforms:
   - name: centos7
     image: timgrt/centos7-ansible:latest
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
     command: "/usr/sbin/init"
     pre_build_image: true
 provisioner:
