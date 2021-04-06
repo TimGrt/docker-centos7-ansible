@@ -4,7 +4,7 @@ CentOS 7 Docker container for Ansible playbook and role testing.
 This container is used to test Ansible roles and playbooks (e.g. with molecule) running locally inside the container.  
 A non-priviledged user `ansible` is created with password-less sudo configured.
 
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/timgrt/centos7-ansible)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/timgrt/centos7-ansible) ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/timgrt/docker-centos7-ansible/main)
 
 ## Tags
 
@@ -24,7 +24,7 @@ This image is built on Docker Hub automatically any time the upstream OS contain
 
   1. [Install Docker](https://docs.docker.com/engine/installation/).
   2. Pull this image from Docker Hub: `docker pull timgrt/centos7-ansible:latest` (or use the image you built earlier, e.g. `centos7-ansible:latest`).
-  3. Run a container from the image: `docker run --detach --privileged --tty timgrt/centos7-ansible:latest` (to test my Ansible roles, I add in a volume mounted from the current working directory with ``--volume=`pwd`:/etc/ansible/roles/role_under_test:ro``).
+  3. Run a container from the image: `docker run --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro timgrt/centos7-ansible:latest` (to test my Ansible roles, I add in a volume mounted from the current working directory with ``--volume=`pwd`:/etc/ansible/roles/role_under_test:ro``).
   4. Use Ansible inside the container:
     a. `docker exec --tty [container_id] env TERM=xterm ansible --version`
     b. `docker exec --tty [container_id] env TERM=xterm ansible-playbook /path/to/ansible/playbook.yml --syntax-check`

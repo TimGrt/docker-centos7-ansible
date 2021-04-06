@@ -2,9 +2,8 @@ FROM centos:7
 LABEL maintainer="Tim Gruetzmacher"
 ENV container=docker
 
-# Install systemd -- See https://hub.docker.com/_/centos/
-RUN yum -y update; yum clean all; \
-(cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+# Activate systemd -- See https://hub.docker.com/_/centos/
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i = systemd-tmpfiles-setup.service ] || rm -f $i; done); \
 rm -f /lib/systemd/system/multi-user.target.wants/*;\
 rm -f /etc/systemd/system/*.wants/*;\
 rm -f /lib/systemd/system/local-fs.target.wants/*; \
@@ -23,18 +22,18 @@ RUN yum makecache fast \
       python-pip \
  && yum clean all
 
-# Upgrade Pip to latest version.
-RUN python -m pip install --upgrade "pip < 21.0"
+# Upgrade Pip to latest version working properly with Python2
+RUN python -m pip install --no-cache-dir --upgrade "pip < 21.0"
 
 # Install Ansible via Pip.
-RUN python -m pip install ansible
+RUN python -m pip install --no-cache-dir ansible
 
 # Disable requiretty.
 RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
 
 # Install Ansible inventory file.
 RUN mkdir -p /etc/ansible
-RUN echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
+RUN printf "[local]\nlocalhost ansible_connection=local\n" > /etc/ansible/hosts
 
 # Create `ansible` user with sudo permissions
 ENV ANSIBLE_USER=ansible
