@@ -1,0 +1,52 @@
+---
+name: Docker Build and Publish
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository.
+        uses: actions/checkout@v2
+
+      - name: Test building image.
+        run: docker build -t docker-ansible .
+
+      - name: Run the built image.
+        run: docker run --name test-container -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro docker-ansible
+
+      - name: Verify Ansible is accessible in the built image.
+        run: docker exec --tty test-container env TERM=xterm ansible --version
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository.
+        uses: actions/checkout@v2
+
+      - name: Login to DockerHub.
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push image.
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: timgrt/centos7-ansible:latest
