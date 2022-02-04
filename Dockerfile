@@ -1,5 +1,6 @@
 FROM centos:7
 LABEL maintainer="Tim Gruetzmacher"
+LABEL org.opencontainers.image.source=https://github.com/TimGrt/docker-centos7-ansible
 ENV container=docker
 
 # Activate systemd -- See https://hub.docker.com/_/centos/
