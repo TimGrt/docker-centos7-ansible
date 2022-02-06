@@ -1,6 +1,6 @@
 FROM centos:7
 LABEL maintainer="Tim Gruetzmacher"
-LABEL org.opencontainers.image.source=https://github.com/TimGrt/docker-centos7-ansible
+LABEL org.opencontainers.image.source="https://github.com/TimGrt/docker-centos7-ansible"
 ENV container=docker
 
 # Activate systemd -- See https://hub.docker.com/_/centos/
@@ -25,6 +25,9 @@ RUN yum makecache fast \
 
 # Upgrade Pip to latest version working properly with Python2
 RUN python -m pip install --no-cache-dir --upgrade "pip < 21.0"
+
+# Upgrade setuptools, otherwise Ansible installation will fail
+RUN python -m pip install --no-cache-dir --upgrade setuptools
 
 # Install Ansible via Pip.
 RUN python -m pip install --no-cache-dir ansible
