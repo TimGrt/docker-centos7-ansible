@@ -27,6 +27,10 @@ This image is built on Docker Hub automatically any time the upstream OS contain
   ```bash
   docker pull timgrt/centos7-ansible:latest
   ```
+  2. You can also pull the image from the Github Container registry.
+  ```bash
+  docker pull ghcr.io/timgrt/docker-centos7-ansible:main
+  ```
   3. Run a container from the image. To test my Ansible roles, I add in a volume mounted from the current working directory with ``--volume=`pwd`:/etc/ansible/roles/role_under_test:ro``.
   ```bash
   docker run --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro timgrt/centos7-ansible:latest
