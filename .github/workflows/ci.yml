@@ -12,9 +12,8 @@ on:
 jobs:
 
   test:
-    name: Test
+    name: Test Docker image build
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository.
         uses: actions/checkout@v2
@@ -28,11 +27,10 @@ jobs:
       - name: Verify Ansible is accessible in the built image.
         run: docker exec --tty test-container env TERM=xterm ansible --version
 
-  publish:
-    name: Publish
+  publish_to_dockerhub:
+    name: Publish to DockerHub
     runs-on: ubuntu-latest
     needs: test
-
     steps:
       - name: Checkout repository.
         uses: actions/checkout@v2
@@ -51,3 +49,36 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: timgrt/centos7-ansible:latest
+    
+
+  publish_to_github_packages:
+    name: Publish to Github Container registry
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ github.repository }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
